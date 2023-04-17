@@ -1,7 +1,7 @@
 ## Users’ Manual of rvTWAS
 ### rvTWAS: 
 
-![My Image](Fig1.PNG)
+![My Image](Fig1A_B.PNG)
 
 ### Installation
 rvTWAS is a batteries-included JAR executable. All needed external jar packages are included in the downloadable, rvTWAS.jar. To download all necessary files, users can use the command 
