@@ -15,11 +15,7 @@ rvTWAS, which is composed by two steps: First, rvTWAS uses SuSiE (\cite SuSiE) t
 ### 1. Feature selection using SuSiE[REF]:
 #### 1.1 Prepare input data:
 **1.1.1	Gene expression file:** \
-Take the whole blood as an example. The fully processed, filtered and normalized gene expression matrices in bed format ("Whole_Blood.v8.normalized_expression.bed") for whole blood was downloaded from GTEx portal (https://gtexportal.org/home/datasets). We included 221 samples in our analysis and removed sex chromosomes. The covariates used in eQTL analysis, including top five genotyping principal components (PCs), were obtained from GTEx_Analysis_v8_eQTL_covariates.tar.gz, which was downloaded from GTEx portal (https://gtexportal.org/home/datasets). Then, we further performed a probabilistic estimation of expression residuals (PEER) analysis to adjust for top five genotyping PCs, age, and other potential confounding factors (PEERs)[2] for downstream prediction model building. There is a description of how to download and use the PEER tool here: https://github.com/PMBio/peer/wiki/Tutorial. The command that we used is shown as below: 
-
-`Rscript ./code/Peer_Script.R`
-
-According to the GTEx protocol, if the number of samples is between 150 and 250, 30 PEER factors should be used. For our study, the number of samples is 221, so we used 60 PEER factors. 
+Take the whole blood as an example. The fully processed, filtered and normalized gene expression matrices in bed format ("Whole_Blood.v8.normalized_expression.bed") for whole blood was downloaded from GTEx portal (https://gtexportal.org/home/datasets). We included 221 samples in our analysis and removed sex chromosomes. The covariates used in eQTL analysis, including top five genotyping principal components (PCs), were obtained from GTEx_Analysis_v8_eQTL_covariates.tar.gz, which was downloaded from GTEx portal (https://gtexportal.org/home/datasets). Then, we further performed a probabilistic estimation of expression residuals (PEER) analysis to adjust for top five genotyping PCs, age, and other potential confounding factors (PEERs)[2] for downstream prediction model building. There is a description of how to download and use the PEER tool here: https://github.com/PMBio/peer/wiki/Tutorial. According to the GTEx protocol, if the number of samples is between 150 and 250, 30 PEER factors should be used. For our study, the number of samples is 221, so we used 60 PEER factors. 
 
 **1.1.2	genotype file:**  
 The whole genome sequencing file, GTEx_Analysis_2017-06-05_v8_WholeGenomeSeq_866Indiv.vcf, was downloaded from dbGaP (https://www.ncbi.nlm.nih.gov/projects/gap/cgi-bin/study.cgi?study_id=phs000424.v8.p2). The genotype dataset is quality controlled using the tool PLINK [3] (https://zzz.bwh.harvard.edu/plink/ ). Multiple QC steps were applied by excluding variants with missingness rate > 0.1, high deviations from Hardy-Weinberg equilibrium at p<10-6, and removing samples with missingness rate > 0.1. To be noticed that, we include all common variants, low frequency variants and rare variants. 
@@ -50,7 +46,7 @@ The input GWAS file ("gwas_file") contains "CHR" and "POS" columns, we just need
 
 #### 1.2. Training SuSiE model:
 We processed one chromosome at a time by executing this code, take chromsome 1 as an example:\
-`Rscript ./code/Susie_Gene_Chr.R  1`
+`Rscript ./CODE/Susie_Gene_Chr.R  1`
 
 ### 2. Feature aggregation using SKAT[REF]:
 Running the command:
@@ -61,11 +57,11 @@ A simple example are described below. Users can get the final p-value result und
 
 #### 2.1. If trying csv format, the command line is:
 
-`java -jar ./CODE/rvTWAS.jar rare-TWAS -format csv -input_genotype ./EXAMPLE/CSV_FORMAT/example.csv -input_phenotype ./EXAMPLE/CSV_FORMAT/example.tsv -input_phenotype_column 2 -input_phenotype_type binary -snp_info_path ./WEIGHT/Susie_weights.txt -pheno_id ENSG00000239961.2 -plink /PATH/TO/plink -Rscript /PATH/TO/Rscript -output_folder /PATH/TO/OUT_FOLDER`
+`java -jar ./CODE/rvTWAS.jar rare-TWAS -format csv -input_genotype ./EXAMPLE/CSV_FORMAT/example.csv -input_phenotype ./EXAMPLE/CSV_FORMAT/example.tsv -input_phenotype_column 2 -input_phenotype_type binary -snp_info_path ./EXAMPLE/Susie_weights.txt -pheno_id ENSG00000239961.2 -plink /PATH/TO/plink -Rscript /PATH/TO/Rscript -output_folder /PATH/TO/OUT_FOLDER`
 
 #### 2.2. If users want to try plink format, the command line is:
 
-`java -jar ./CODE/rvTWAS.jar rare-TWAS -format plink -input_genotype ./EXAMPLE/PLINK_FORMAT/example.tped -input_phenotype ./EXAMPLE/PLINK_FORMAT/example.tfam -input_phenotype_column 6 -input_phenotype_type binary -snp_info_path ./WEIGHT/Susie_weights.txt -pheno_id ENSG00000239961.2 -plink /PATH/TO/plink -Rscript /PATH/TO/Rscript -output_folder /PATH/TO/OUT_FOLDER
+`java -jar ./CODE/rvTWAS.jar rare-TWAS -format plink -input_genotype ./EXAMPLE/PLINK_FORMAT/example.tped -input_phenotype ./EXAMPLE/PLINK_FORMAT/example.tfam -input_phenotype_column 6 -input_phenotype_type binary -snp_info_path ./EXAMPLE/Susie_weights.txt -pheno_id ENSG00000239961.2 -plink /PATH/TO/plink -Rscript /PATH/TO/Rscript -output_folder /PATH/TO/OUT_FOLDER`
 
 Please note that, to consistent with plink format, the phenotype is set to missing (normally represented by -9) if unspecified. It must be a numeric value. Case/control phenotypes are normally coded as control = 1, case = 2.The rvTWAS.result under /PATH/TO/OUT_FOLDER is the final output file by rvTWAS.
 
